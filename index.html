@@ -29,12 +29,9 @@
                     const response = await fetch('https://api.scraperapi.com?api_key=' + encodeURIComponent(window.API_KEY) + '&url=' + encodeURIComponent(url));
                     htmlContent = await response.text();
                     
-                    
                     newWindow = window.open();
                     
-                    
                     newWindow.document.write(htmlContent);
-
                    
                     document.getElementById("downloadButton").style.display = "inline";
                 } catch (error) {
@@ -53,7 +50,6 @@
                         newWindow.close();
                         console.log("Nové okno bylo úspěšně zavřeno.");
                     }
-
                    
                     document.getElementById("downloadLink").style.display = "inline";
                     document.getElementById("downloadLink").setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(htmlContent));
