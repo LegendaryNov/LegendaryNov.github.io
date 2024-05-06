@@ -15,6 +15,7 @@
         <div id="downloadArea">
             <a href="#" id="downloadLink" style="display: none;">Odkaz ke stažení výsledků vyhledávání.</a>
         </div>
+        <script src="config.js"></script>
         <script>
             var htmlContent = ''; // Proměnná pro uchování HTML obsahu stránky
             var newWindow = null; // Proměnná pro uchování otevřeného nového okna
@@ -22,19 +23,26 @@
                 console.log("Funkce searchGoogle() byla spuštěna.");
                 var searchQuery = document.getElementById("searchQuery").value;
                 var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
-            
-                // Otevře nové okno s výsledky vyhledávání
-                newWindow = window.open();
+                
+                try {
+                    // Získání obsahu stránky pomocí ScraperAPI
+                    const response = await fetch('https://api.scraperapi.com?api_key=' + encodeURIComponent(API_KEY) + '&url=' + encodeURIComponent(url));
+                    htmlContent = await response.text();
+                    
+                    // Otevře nové okno s výsledky vyhledávání
+                    newWindow = window.open();
+                    
+                    // Vloží HTML obsah do nového okna
+                    newWindow.document.write(htmlContent);
 
-                // Získej HTML obsah stránky pomocí Puppeteer
-                const response = await fetch('/getHTMLContent?url=' + encodeURIComponent(url));
-                htmlContent = await response.text();
-
-                // Zobrazí tlačítko pro stáhnutí výsledků
-                document.getElementById("downloadButton").style.display = "inline";
+                    // Zobrazí tlačítko pro stáhnutí výsledků
+                    document.getElementById("downloadButton").style.display = "inline";
+                } catch (error) {
+                    console.error('Chyba při získávání obsahu stránky:', error);
+                }
             }
 
-            async function downloadResults() {
+            function downloadResults() {
                 console.log("Funkce downloadResults() byla spuštěna.");
                 console.log("Obsah proměnné htmlContent:");
                 console.log(htmlContent);
@@ -53,6 +61,5 @@
                 }
             }
         </script>
-    </div>
 </body>
 </html>
