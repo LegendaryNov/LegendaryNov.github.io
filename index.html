@@ -11,35 +11,30 @@
     <div class="Kolonka_vyhledávání">
         <input type="text" id="searchQuery" placeholder="Zadejte hledaný výraz"><br>
         <button onclick="searchGoogle()">Hledat</button>
-        <button onclick="downloadResults()">Stáhnout výsledky</button>
+        <button onclick="downloadResults()" id="downloadButton" style="display: none;">Stáhnout výsledky</button>
         <div id="downloadArea">
             <a href="#" id="downloadLink" style="display: none;">Odkaz ke stažení výsledků vyhledávání.</a>
         </div>
         <script>
             var htmlContent = ''; // Proměnná pro uchování HTML obsahu stránky
             var newWindow = null; // Proměnná pro uchování otevřeného nového okna
-            function searchGoogle() {
+            async function searchGoogle() {
                 console.log("Funkce searchGoogle() byla spuštěna.");
                 var searchQuery = document.getElementById("searchQuery").value;
                 var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
             
                 // Otevře nové okno s výsledky vyhledávání
-                newWindow = window.open(url);
-            
-                // Počká, dokud se nové okno ne načte
-                newWindow.onload = function() {
-                    console.log("Nové okno bylo úspěšně načteno.");
-                    // Získá HTML obsah stránky
-                    htmlContent = newWindow.document.documentElement.outerHTML;
-                    
-                    // Zobrazí tlačítko pro stáhnutí výsledků
-                    document.getElementById("downloadLink").style.display = "inline";
-                    document.getElementById("downloadLink").setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(htmlContent));
-                    document.getElementById("downloadLink").setAttribute("download", "search_results.txt");
-                };
+                newWindow = window.open();
+
+                // Získej HTML obsah stránky pomocí Puppeteer
+                const response = await fetch('/getHTMLContent?url=' + encodeURIComponent(url));
+                htmlContent = await response.text();
+
+                // Zobrazí tlačítko pro stáhnutí výsledků
+                document.getElementById("downloadButton").style.display = "inline";
             }
 
-            function downloadResults() {
+            async function downloadResults() {
                 console.log("Funkce downloadResults() byla spuštěna.");
                 console.log("Obsah proměnné htmlContent:");
                 console.log(htmlContent);
@@ -52,7 +47,9 @@
                     }
 
                     // Stáhnout soubor
-                    window.location.href = "data:text/plain;charset=utf-8," + encodeURIComponent(htmlContent);
+                    document.getElementById("downloadLink").style.display = "inline";
+                    document.getElementById("downloadLink").setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(htmlContent));
+                    document.getElementById("downloadLink").setAttribute("download", "search_results.txt");
                 }
             }
         </script>
