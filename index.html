@@ -16,12 +16,11 @@
     </div>
     <script>
         var newWindow = null;
-        var scraperApiKey = 'YOUR_SCRAPER_API_KEY';
 
         async function searchGoogle() {
             console.log("Funkce searchGoogle() byla spuštěna.");
             var searchQuery = document.getElementById("searchQuery").value;
-            var url = "https://api.scraperapi.com?api_key=" + encodeURIComponent(scraperApiKey) + "&url=" + encodeURIComponent("https://www.google.com/search?q=" + searchQuery);
+            var url = "https://api.scraperapi.com?api_key=" + encodeURIComponent(window.API_KEY) + "&url=" + encodeURIComponent("https://www.google.com/search?q=" + searchQuery);
             
             try {
                 const response = await fetch(url);
