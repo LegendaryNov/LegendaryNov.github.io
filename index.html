@@ -12,29 +12,17 @@
     <div class="Kolonka_vyhledávání">
         <input type="text" id="searchQuery" placeholder="Zadejte hledaný výraz"><br>
         <button onclick="searchGoogle()">Hledat</button>
-        <button onclick="downloadResults()" id="downloadButton" style="display: none;">Stáhnout výsledky</button>
     </div>
     <script>
-        var newWindow = null; // Globální proměnná pro uchování odkazu na nové okno
-        
         async function searchGoogle() {
             console.log("Funkce searchGoogle() byla spuštěna.");
             var searchQuery = document.getElementById("searchQuery").value;
             var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
             
             try {
-                newWindow = window.open(url, "_blank"); // Otevření nového okna se stránkou Google vyhledání
-                newWindow.focus();
-                document.getElementById("downloadButton").style.display = "inline";
+                window.location.href = url; // Přesměrování na stránku Google vyhledání
             } catch (error) {
                 console.error('Chyba při zobrazování stránky Google:', error);
-            }
-        }
-
-        function downloadResults() {
-            console.log("Funkce downloadResults() byla spuštěna.");
-            if (newWindow) {
-                newWindow.print(); // Tisk obsahu nového okna (stránka Google vyhledání)
             }
         }
     </script>
