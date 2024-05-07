@@ -6,13 +6,14 @@
     <title>Vyhledávání pomocí klíčového spojení</title>
     <link rel="stylesheet" href="Styly.css">
     <script src="config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> <!-- Import knihovny jsPDF -->
 </head>
 <body>
     <h1>Stránka pro vyhledávání</h1>
     <div class="Kolonka_vyhledávání">
         <input type="text" id="searchQuery" placeholder="Zadejte hledaný výraz"><br>
         <button onclick="searchGoogle()">Hledat</button>
-        <button onclick="printResults()" id="printButton" style="display: none;">Tisknout výsledky</button>
+        <button onclick="printResults()" id="printButton" style="display: none;">Stáhnout výsledky jako PDF</button>
     </div>
     <script>
         var newWindow = null;
@@ -34,7 +35,9 @@
         function printResults() {
             console.log("Funkce printResults() byla spuštěna.");
             if (newWindow) {
-                newWindow.print(); // Tisk obsahu nového okna
+                var pdf = new jsPDF(); // Vytvoření instance knihovny jsPDF
+                pdf.text(10, 10, 'Výsledky vyhledávání'); // Přidání textu do PDF
+                pdf.save('vysledky_vyhledavani.pdf'); // Uložení PDF souboru
             }
         }
     </script>
