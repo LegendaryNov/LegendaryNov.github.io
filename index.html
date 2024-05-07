@@ -16,18 +16,23 @@
     </div>
     <script>
         var newWindow = null;
+        var scraperApiKey = 'YOUR_SCRAPER_API_KEY';
 
         async function searchGoogle() {
             console.log("Funkce searchGoogle() byla spuštěna.");
             var searchQuery = document.getElementById("searchQuery").value;
-            var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
+            var url = "https://api.scraperapi.com?api_key=" + encodeURIComponent(scraperApiKey) + "&url=" + encodeURIComponent("https://www.google.com/search?q=" + searchQuery);
             
             try {
-                newWindow = window.open(url, "_blank"); // Otevření výsledků vyhledávání v novém okně
-                newWindow.focus();
+                const response = await fetch(url);
+                const htmlContent = await response.text();
+                
+                newWindow = window.open();
+                newWindow.document.write(htmlContent);
+                
                 document.getElementById("downloadButton").style.display = "inline";
             } catch (error) {
-                console.error('Chyba při zobrazování stránky Google:', error);
+                console.error('Chyba při získávání obsahu stránky:', error);
             }
         }
 
