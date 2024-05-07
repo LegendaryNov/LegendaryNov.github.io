@@ -17,22 +17,19 @@
             <a href="#" id="downloadLink" style="display: none;">Odkaz ke stažení výsledků vyhledávání.</a>
         </div>
         <script>
-            var htmlContent = '';
-            var newWindow = null; 
+            var textContent = ''; // Proměnná pro ukládání textového obsahu
             async function searchGoogle() {
                 console.log("Funkce searchGoogle() byla spuštěna.");
                 var searchQuery = document.getElementById("searchQuery").value;
                 var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
                 
                 try {
-                   
                     const response = await fetch('https://api.scraperapi.com?api_key=' + encodeURIComponent(window.API_KEY) + '&url=' + encodeURIComponent(url));
-                    htmlContent = await response.text();
-                    
-                    newWindow = window.open();
-                    
-                    newWindow.document.write(htmlContent);
-                   
+                    const htmlContent = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlContent, 'text/html');
+                    textContent = doc.body.innerText; // Extrahování pouze textového obsahu z těla HTML
+                    console.log("Textový obsah stránky:", textContent);
                     document.getElementById("downloadButton").style.display = "inline";
                 } catch (error) {
                     console.error('Chyba při získávání obsahu stránky:', error);
@@ -41,21 +38,15 @@
 
             function downloadResults() {
                 console.log("Funkce downloadResults() byla spuštěna.");
-                console.log("Obsah proměnné htmlContent:");
-                console.log(htmlContent);
-                if(htmlContent) {
-                    console.log("Obsah k dispozici. Zavřít nové okno a stáhnout soubor.");
-                   
-                    if(newWindow) {
-                        newWindow.close();
-                        console.log("Nové okno bylo úspěšně zavřeno.");
-                    }
-                   
+                console.log("Textový obsah pro stažení:", textContent);
+                if(textContent) {
+                    console.log("Textový obsah k dispozici. Vytvořit odkaz ke stažení.");
                     document.getElementById("downloadLink").style.display = "inline";
-                    document.getElementById("downloadLink").setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(htmlContent));
+                    document.getElementById("downloadLink").setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(textContent));
                     document.getElementById("downloadLink").setAttribute("download", "search_results.txt");
                 }
             }
         </script>
+    </div>
 </body>
 </html>
