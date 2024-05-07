@@ -20,7 +20,7 @@
             var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
             
             try {
-                window.location.href = url; // Přesměrování na stránku Google vyhledání
+                window.open(url, "_blank"); // Otevření výsledků vyhledávání v novém okně
             } catch (error) {
                 console.error('Chyba při zobrazování stránky Google:', error);
             }
