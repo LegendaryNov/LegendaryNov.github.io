@@ -26,6 +26,12 @@
                 console.error('Chyba při zobrazování stránky Google:', error);
             }
         }
+        function downloadResults() {
+            console.log("Funkce downloadResults() byla spuštěna.");
+            if (newWindow) {
+                newWindow.print(); // Tisk obsahu nového okna (stránka Google vyhledání)
+            }
+        }
     </script>
 </body>
 </html>
