@@ -13,9 +13,6 @@
         <input type="text" id="searchQuery" placeholder="Zadejte hledaný výraz"><br>
         <button onclick="searchGoogle()">Hledat</button>
         <button onclick="downloadResults()" id="downloadButton" style="display: none;">Stáhnout výsledky</button>
-        <div id="downloadArea">
-            <a href="#" id="downloadLink" style="display: none;">Odkaz ke stažení výsledků vyhledávání.</a>
-        </div>
     </div>
     <script>
         var newWindow = null; // Globální proměnná pro uchování odkazu na nové okno
@@ -26,33 +23,18 @@
             var url = "https://www.google.com/search?q=" + encodeURIComponent(searchQuery);
             
             try {
-                const response = await fetch('https://api.scraperapi.com?api_key=' + encodeURIComponent(window.API_KEY) + '&url=' + encodeURIComponent(url) + '&render=false');
-                const htmlContent = await response.text();
-                const textContent = extractVisibleTextFromHTML(htmlContent); // Extrahovat viditelný text z HTML obsahu
-                console.log("Textový obsah stránky:", textContent);
-                openNewWindow(textContent); // Zavolání funkce pro otevření nového okna s výsledky
+                newWindow = window.open(url, "_blank"); // Otevření nového okna se stránkou Google vyhledání
+                newWindow.focus();
                 document.getElementById("downloadButton").style.display = "inline";
             } catch (error) {
-                console.error('Chyba při získávání obsahu stránky:', error);
+                console.error('Chyba při zobrazování stránky Google:', error);
             }
-        }
-
-        function extractVisibleTextFromHTML(html) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            return doc.body.innerText; // Extrahování pouze textového obsahu z těla HTML
-        }
-
-        function openNewWindow(textContent) {
-            newWindow = window.open(); // Otevření nového okna
-            newWindow.document.write("<pre>" + textContent + "</pre>"); // Zobrazení textového obsahu ve formátu předformátovaného textu
-            newWindow.document.close(); // Uzavření dokumentu nového okna
         }
 
         function downloadResults() {
             console.log("Funkce downloadResults() byla spuštěna.");
             if (newWindow) {
-                newWindow.print(); // Tisk obsahu nového okna
+                newWindow.print(); // Tisk obsahu nového okna (stránka Google vyhledání)
             }
         }
     </script>
